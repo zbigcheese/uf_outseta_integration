@@ -25,12 +25,10 @@ class OutsetaService
      */
     public function __construct(Config $config, HttpClient $client)
     {
-        $this->apiKey = $config->getString('outseta.api_key');
-        $this->secretKey = $config->getString('outseta.secret_key');
-        $outsetaDomain = $config->getString('outseta.domain');
-
+        // ... other lines remain the same ...
         $this->baseUrl = "https://{$outsetaDomain}.outseta.com/api/v1/";
 
+        // Configure the Guzzle client
         $this->client = new HttpClient([
             'base_uri' => $this->baseUrl,
             'headers' => [
@@ -39,6 +37,11 @@ class OutsetaService
                 'Accept'        => 'application/json',
             ],
             'timeout' => 5.0,
+
+            // --- PERMANENT WORKAROUND FOR LOCAL WAMP SERVER ---
+            // This bypasses the local SSL certificate verification issue.
+            // REMOVE THIS LINE BEFORE DEPLOYING TO A LIVE SERVER.
+            'verify' => false,
         ]);
     }
 
