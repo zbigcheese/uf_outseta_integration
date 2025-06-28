@@ -29,6 +29,8 @@ class OutsetaService
         $this->secretKey = $config->getString('outseta.secret_key');
         $outsetaDomain = $config->getString('outseta.domain');
 
+        dd($outsetaDomain); // <-- ADD THIS LINE FOR DEBUGGING
+
         $this->baseUrl = "https://{$outsetaDomain}.outseta.com/api/v1/";
 
         $this->client = new HttpClient([
