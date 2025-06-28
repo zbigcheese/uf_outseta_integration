@@ -5,6 +5,7 @@ namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\OutsetaService;
+use Slim\Views\Twig;
 
 class OutsetaDemoController
 {
