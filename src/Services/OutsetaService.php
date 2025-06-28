@@ -63,30 +63,11 @@ class OutsetaService
                 ]
             ]);
 
-            // --- START SUCCESS DEBUGGING ---
-            // If the request was successful, let's see what Outseta sent back.
-            echo "API Request Succeeded (Status 200).<br>";
-            $body = json_decode((string) $response->getBody(), true);
-            dd($body); // This will stop execution and dump the response from Outseta.
-            // --- END SUCCESS DEBUGGING ---
-
             return $this->handleResponse($response);
-
         } catch (RequestException $e) {
-
-            // --- START ERROR DEBUGGING ---
-            // If the request failed, let's see the detailed error.
-            echo "Outseta API Request Failed.<br>";
-            if ($e->hasResponse()) {
-                $errorResponse = $e->getResponse();
-                echo "Status Code: " . $errorResponse->getStatusCode() . "<br>";
-                echo "Response Body: <pre>" . $errorResponse->getBody()->getContents() . "</pre>";
+            if ($e->hasResponse() && $e->getResponse()->getStatusCode() == 404) {
+                return null;
             }
-            // Also dump the main error message
-            dd($e->getMessage());
-            // --- END ERROR DEBUGGING ---
-
-            // This part will not be reached because of dd()
             error_log('Outseta API Error: ' . $e->getMessage());
             return null;
         }
