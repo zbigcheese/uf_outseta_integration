@@ -2,9 +2,8 @@
 
 namespace Zbigcheese\Sprinkles\UfOutsetaIntegration;
 
+use UserFrosting\Sprinkle\Core\Core;
 use UserFrosting\Sprinkle\SprinkleRecipe;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Routes\WebRoutes;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Templates\DefaultTemplate;
 
 class UfOutsetaIntegration implements SprinkleRecipe
 {
