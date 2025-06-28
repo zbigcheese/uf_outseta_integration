@@ -38,4 +38,15 @@ class UfOutsetaIntegration implements SprinkleRecipe
             'default' => DefaultTemplate::class,
         ];
     }
+
+    /**
+     * Returns a list of all PHP-DI services/container definitions class.
+     *
+     * @return class-string<\UserFrosting\ServicesProvider\ServicesProviderInterface>[]
+     */
+    public function getServices(): array
+    {
+        // This sprinkle does not have any custom services.
+        return [];
+    }
 }
