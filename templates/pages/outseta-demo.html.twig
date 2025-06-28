@@ -1,0 +1,9 @@
+{% extends "pages/abstract/base.html.twig" %}
+
+{% block page_title %}Outseta Integration Test{% endblock %}
+
+{% block page_description %}testing{% endblock %}
+
+{% block content %}
+    {{payload | raw}}
+{% endblock %}
