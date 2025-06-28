@@ -1,0 +1,14 @@
+{
+    "name": "zbigcheese/uf-outseta-integration",
+    "type": "userfrosting-sprinkle",
+    "description": "Provides Outseta integration for UserFrosting.",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Zbigcheese\\Sprinkles\\UfOutsetaIntegration\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.1"
+    }
+}
