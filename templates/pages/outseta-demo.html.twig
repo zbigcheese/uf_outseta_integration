@@ -5,5 +5,8 @@
 {% block page_description %}testing{% endblock %}
 
 {% block content %}
-    {{payload | raw}}
+    <p>simple test trying to fetch user details for info@urosaleksic.com</p>
+    <p>message: {{payload.message}}</p>
+    <p>name: {{payload.name}}</p>
+    <p>uid: {{payload.uid}}</p>
 {% endblock %}
