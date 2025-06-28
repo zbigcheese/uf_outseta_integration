@@ -20,24 +20,24 @@ class UfOutsetaIntegration implements SprinkleRecipe
 
     public function getSprinkles(): array
     {
-        // This sprinkle has no dependencies on other sprinkles.
-        // Its dependencies on framework/core are handled by composer.json.
-        return [];
+        return [
+            Core::class,
+        ];
     }
 
     public function getRoutes(): array
     {
         return [
-            WebRoutes::class,
+            Routes::class,
         ];
     }
 
-    public function getTemplates(): array
+    /*public function getTemplates(): array
     {
         return [
             'default' => DefaultTemplate::class,
         ];
-    }
+    }*/
 
     /**
      * Returns a list of all PHP-DI services/container definitions class.

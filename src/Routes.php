@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Zbigcheese\Sprinkles\UfOutsetaIntegration;
+
+use Slim\App;
+use UserFrosting\Routes\RouteDefinitionInterface;
+use Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller\OutsetaIntegrationController;
+
+class Routes implements RouteDefinitionInterface
+{
+    public function register(App $app): void
+    {
+        $app->get('/uf-outseta-integration', OutsetaIntegrationController::class);
+    }
+}
