@@ -25,7 +25,10 @@ class OutsetaService
      */
     public function __construct(Config $config, HttpClient $client)
     {
-        // ... other lines remain the same ...
+        $this->apiKey = $config->getString('outseta.api_key');
+        $this->secretKey = $config->getString('outseta.secret_key');
+        $outsetaDomain = $config->getString('outseta.domain');
+
         $this->baseUrl = "https://{$outsetaDomain}.outseta.com/api/v1/";
 
         // Configure the Guzzle client
