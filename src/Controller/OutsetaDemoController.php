@@ -33,6 +33,12 @@ class OutsetaDemoController
             $payload = ['message' => 'User not found.'];
         }
 
-        return $view->render($response, 'pages/outseta-demo.html.twig', $payload);
+        return $view->render($response, 'pages/outseta-demo.html.twig', 
+            [
+                'payload' => $payload,
+                'testvar' => 'test123'
+
+            ]
+        );
     }
 }
