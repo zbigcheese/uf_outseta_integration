@@ -9,7 +9,17 @@ use Slim\Views\Twig;
 
 class OutsetaDemoController
 {
-    public function page(Request $request, Response $response, OutsetaService $outseta): Response
+
+    /**
+     * test.
+     * Request type: GET.
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param Twig     $view
+     */
+
+    public function page(Request $request, Response $response, OutsetaService $outseta, Twig $view): Response
     {
         $person = $outseta->getPersonByEmail('info@urosaleksic.com');
 
