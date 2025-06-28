@@ -4,10 +4,9 @@ namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\OutsetaService;
 
-class OutsetaDemoController extends SimpleController
+class OutsetaDemoController
 {
     public function page(Request $request, Response $response, OutsetaService $outseta): Response
     {
