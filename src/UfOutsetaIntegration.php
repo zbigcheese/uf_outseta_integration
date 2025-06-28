@@ -3,9 +3,9 @@
 namespace Zbigcheese\Sprinkles\UfOutsetaIntegration;
 
 use UserFrosting\Sprinkle\Core\Core;
-use UserFrosting\Sprinkle\SprinkleRecipe;
+use UserFrosting\Sprinkle\Sprinkle;
 
-class UfOutsetaIntegration implements SprinkleRecipe
+class UfOutsetaIntegration implements Sprinkle
 {
     public function getBootstrapper(): string
     {
