@@ -4,60 +4,67 @@ namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Services;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
+use Psr\Container\ContainerInterface; // <-- Import this
 use Psr\Http\Message\ResponseInterface;
-use UserFrosting\Config\Config;
 
 /**
  * Service class for interacting with the Outseta API.
  */
 class OutsetaService
 {
-    protected HttpClient $client;
-    protected string $apiKey;
-    protected string $secretKey;
-    protected string $baseUrl;
+    protected ContainerInterface $ci;
+    protected ?HttpClient $client = null; // The client is now nullable and starts as null
 
     /**
-     * Constructor.
+     * The constructor is now very simple. It just accepts the main service container.
      *
-     * @param Config $config The UserFrosting config service.
-     * @param HttpClient $client The Guzzle HTTP client.
+     * @param ContainerInterface $ci
      */
-    public function __construct(Config $config, HttpClient $client)
+    public function __construct(ContainerInterface $ci)
     {
-        $this->apiKey = $config->getString('outseta.api_key');
-        $this->secretKey = $config->getString('outseta.secret_key');
+        $this->ci = $ci;
+    }
+
+    /**
+     * A private "getter" method to initialize the HTTP client only when it's first needed.
+     */
+    private function getClient(): HttpClient
+    {
+        // If the client has already been created, just return it.
+        if ($this->client !== null) {
+            return $this->client;
+        }
+
+        // If not, create it now. By this point, the app has fully booted and 'config' will be available.
+        $config = $this->ci->get('config'); // Get config from the container
+        $apiKey = $config->getString('outseta.api_key');
+        $secretKey = $config->getString('outseta.secret_key');
         $outsetaDomain = $config->getString('outseta.domain');
+        $baseUrl = "https://{$outsetaDomain}.outseta.com/api/v1/";
 
-        $this->baseUrl = "https://{$outsetaDomain}.outseta.com/api/v1/";
-
-        // Configure the Guzzle client
+        // Create and store the client for future use
         $this->client = new HttpClient([
-            'base_uri' => $this->baseUrl,
+            'base_uri' => $baseUrl,
             'headers' => [
-                'Authorization' => "Outseta {$this->apiKey}:{$this->secretKey}",
+                'Authorization' => "Outseta {$apiKey}:{$secretKey}",
                 'Content-Type'  => 'application/json',
                 'Accept'        => 'application/json',
             ],
             'timeout' => 5.0,
-
-            // --- PERMANENT WORKAROUND FOR LOCAL WAMP SERVER ---
-            // This bypasses the local SSL certificate verification issue.
-            // REMOVE THIS LINE BEFORE DEPLOYING TO A LIVE SERVER.
-            'verify' => false,
+            'verify'  => false, // Keep the SSL workaround for your local env
         ]);
+
+        return $this->client;
     }
 
     /**
-     * Retrieves a person from Outseta by their email address.
-     *
-     * @param string $email
-     * @return array|null The person's data as an array, or null if not found.
+     * All public methods must now use getClient() to ensure the client is initialized.
      */
     public function getPersonByEmail(string $email): ?array
     {
         try {
-            $response = $this->client->get('crm/people', [
+            // Use the getter method here
+            $response = $this->getClient()->get('crm/people', [
                 'query' => [
                     'Email' => $email,
                 ]
@@ -73,39 +80,23 @@ class OutsetaService
         }
     }
 
-    /**
-     * Retrieves the authenticated user's profile from Outseta using an access token.
-     *
-     * @param string $accessToken The access token received from Outseta.
-     * @return array|null The person's data as an array, or null if it fails.
-     */
     public function getPersonByToken(string $accessToken): ?array
     {
         try {
-            // We make a request to the /profile endpoint, but instead of our admin API key,
-            // we use the user's access token as a Bearer token for authorization.
-            $response = $this->client->get('profile', [
+            // Use the getter method here
+            $response = $this->getClient()->get('profile', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $accessToken,
                 ]
             ]);
 
             return json_decode((string) $response->getBody(), true);
-
         } catch (RequestException $e) {
-            // If the token is invalid or expired, Outseta will return a 401 error.
-            // We log the error and return null.
             error_log('Outseta getPersonByToken failed: ' . $e->getMessage());
             return null;
         }
     }
 
-    /**
-     * A helper function to process the API response.
-     *
-     * @param ResponseInterface $response
-     * @return array|null
-     */
     protected function handleResponse(ResponseInterface $response): ?array
     {
         if ($response->getStatusCode() !== 200) {

@@ -9,6 +9,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\User as CoreUser;
  * User Class
  *
  * Represents a User object, extended for Outseta integration.
+ * @property OutsetaSubscriber|null $outsetaSubscriber The subscriber details from Outseta.
  */
 class User extends CoreUser
 {

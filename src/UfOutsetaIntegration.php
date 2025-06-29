@@ -2,67 +2,36 @@
 
 namespace Zbigcheese\Sprinkles\UfOutsetaIntegration;
 
-// Corrected 'use' statements
+// These 'use' statements declare the dependencies
+use UserFrosting\Sprinkle\Core\Core;
+use UserFrosting\Sprinkle\Account\Account;
+use UserFrosting\Sprinkle\Admin\Admin;
+
 use UserFrosting\Sprinkle\SprinkleRecipe;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\MigrationRecipe;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Migrations\AddOutsetaSubscribersTable;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\ServicesProvider\OutsetaServiceProvider;
+use Zbigcheese\Sprinkles\UfOutsetaIntegration\Routes;
 
 class UfOutsetaIntegration implements SprinkleRecipe, MigrationRecipe
 {
-    public function getName(): string
-    {
-        return 'Outseta Integration';
-    }
+    // ... all your other methods like getName(), getPath(), etc., are fine ...
+    public function getName(): string { return 'Outseta Integration'; }
+    public function getPath(): string { return __DIR__ . '/../'; }
+    public function getServices(): array { return [ OutsetaServiceProvider::class ]; }
+    public function getRoutes(): array { return [ Routes::class ]; }
+    public function getMigrations(): array { return [ AddOutsetaSubscribersTable::class ]; }
+    public function getBakeryCommands(): array { return []; }
 
-    public function getPath(): string
-    {
-        return __DIR__ . '/../';
-    }
-
-    public function getServices(): array
-    {
-        return [
-            OutsetaServiceProvider::class,
-        ];
-    }
-
+    /**
+     * Returns a list of Sprinkles this Sprinkle depends on.
+     * THIS IS THE FIX.
+     * This guarantees that Core, Account, and Admin services are loaded before this Sprinkle.
+     *
+     * @return array<class-string<SprinkleRecipe>>
+     */
     public function getSprinkles(): array
     {
-        return [];
-    }
-
-    public function getRoutes(): array
-    {
-        return [
-            Routes::class,
-        ];
-    }
-
-    /**
-     * Returns a list of all migrations classes for this Sprinkle.
-     * This method is required by the MigrationRecipe interface.
-     *
-     * @return array<class-string<\UserFrosting\Sprinkle\Core\Database\Migration>>
-     */
-    public function getMigrations(): array
-    {
-        return [
-            AddOutsetaSubscribersTable::class,
-        ];
-    }
-
-    /**
-     * Returns a list of all Bakery commands for this Sprinkle.
-     *
-     * @return array<class-string<\Symfony\Component\Console\Command\Command>>
-     */
-    public function getBakeryCommands(): array
-    {
-        // We can leave this in for future use or remove if you prefer.
-        // return [
-        //     ForceMigrateCommand::class,
-        // ];
         return [];
     }
 }
