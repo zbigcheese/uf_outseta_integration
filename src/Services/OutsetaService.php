@@ -4,45 +4,25 @@ namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Services;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
-use Psr\Container\ContainerInterface; // <-- Import this
 use Psr\Http\Message\ResponseInterface;
+use UserFrosting\Config\Config; // <-- Import Config
 
-/**
- * Service class for interacting with the Outseta API.
- */
 class OutsetaService
 {
-    protected ContainerInterface $ci;
-    protected ?HttpClient $client = null; // The client is now nullable and starts as null
+    protected HttpClient $client;
 
     /**
-     * The constructor is now very simple. It just accepts the main service container.
-     *
-     * @param ContainerInterface $ci
+     * Constructor with direct dependency injection.
      */
-    public function __construct(ContainerInterface $ci)
+    public function __construct(Config $config, HttpClient $client)
     {
-        $this->ci = $ci;
-    }
-
-    /**
-     * A private "getter" method to initialize the HTTP client only when it's first needed.
-     */
-    private function getClient(): HttpClient
-    {
-        // If the client has already been created, just return it.
-        if ($this->client !== null) {
-            return $this->client;
-        }
-
-        // If not, create it now. By this point, the app has fully booted and 'config' will be available.
-        $config = $this->ci->get('config'); // Get config from the container
         $apiKey = $config->getString('outseta.api_key');
         $secretKey = $config->getString('outseta.secret_key');
         $outsetaDomain = $config->getString('outseta.domain');
         $baseUrl = "https://{$outsetaDomain}.outseta.com/api/v1/";
 
-        // Create and store the client for future use
+        // Guzzle client is now created directly here.
+        // We use the injected $client and re-configure it.
         $this->client = new HttpClient([
             'base_uri' => $baseUrl,
             'headers' => [
@@ -53,21 +33,15 @@ class OutsetaService
             'timeout' => 5.0,
             'verify'  => false, // Keep the SSL workaround for your local env
         ]);
-
-        return $this->client;
     }
 
-    /**
-     * All public methods must now use getClient() to ensure the client is initialized.
-     */
+    // All other methods (getPersonByEmail, etc.) are the same,
+    // but they now use $this->client directly, not $this->getClient().
     public function getPersonByEmail(string $email): ?array
     {
         try {
-            // Use the getter method here
-            $response = $this->getClient()->get('crm/people', [
-                'query' => [
-                    'Email' => $email,
-                ]
+            $response = $this->client->get('crm/people', [
+                'query' => ['Email' => $email]
             ]);
 
             return $this->handleResponse($response);
@@ -83,11 +57,8 @@ class OutsetaService
     public function getPersonByToken(string $accessToken): ?array
     {
         try {
-            // Use the getter method here
-            $response = $this->getClient()->get('profile', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                ]
+            $response = $this->client->get('profile', [
+                'headers' => ['Authorization' => 'Bearer ' . $accessToken]
             ]);
 
             return json_decode((string) $response->getBody(), true);
@@ -110,5 +81,24 @@ class OutsetaService
         }
 
         return null;
+    }
+
+    /**
+     * Retrieves a full Account object from Outseta by its UID.
+     * This object contains subscription details.
+     *
+     * @param string $accountUid The Account UID from Outseta.
+     * @return array|null The Account data, or null if not found.
+     */
+    public function getAccount(string $accountUid): ?array
+    {
+        try {
+            $response = $this->client->get("crm/accounts/{$accountUid}");
+
+            return json_decode((string) $response->getBody(), true);
+        } catch (RequestException $e) {
+            error_log('Outseta getAccount failed: ' . $e->getMessage());
+            return null;
+        }
     }
 }

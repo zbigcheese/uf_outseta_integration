@@ -2,11 +2,16 @@
 
 namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\ServicesProvider;
 
+// Add these new 'use' statements
 use Psr\Container\ContainerInterface;
+use Slim\App;
+use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
+use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
+
 use UserFrosting\ServicesProvider\ServicesProviderInterface;
-// Import the necessary classes
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Models\User as ExtendedUser;
+use Zbigcheese\Sprinkles\UfOutsetaIntegration\Http\Middleware\SubscriptionAuthMiddleware;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\OutsetaService;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\UserProvisioner;
 
@@ -15,19 +20,26 @@ class OutsetaServiceProvider implements ServicesProviderInterface
     public function register(): array
     {
         return [
-            // ... Other services might be here ...
+            // This service registration is fine, we'll use autowire.
+            OutsetaService::class => \DI\autowire(OutsetaService::class),
 
-            OutsetaService::class => function (ContainerInterface $c) {
-                // Just pass the container itself to the constructor
-                return new OutsetaService($c);
-            },
+            // This one is also fine.
+            UserProvisioner::class => \DI\autowire(UserProvisioner::class),
 
-            UserProvisioner::class => function (ContainerInterface $c) {
-                return new UserProvisioner();
-            },
+            // This one is also fine.
+            UserInterface::class => \DI\create(ExtendedUser::class),
             
-            UserInterface::class => function (ContainerInterface $c) {
-                return new ExtendedUser();
+            // --- THIS IS THE FIX ---
+            // We replace the autowiring for the middleware with a manual factory.
+            SubscriptionAuthMiddleware::class => function (ContainerInterface $c) {
+                $app = $c->get(App::class);
+
+                return new SubscriptionAuthMiddleware(
+                    $c->get(Authenticator::class),
+                    $c->get(AuthorizationManager::class), // <-- Add the new dependency here
+                    $c->get(OutsetaService::class),
+                    $app->getResponseFactory()
+                );
             },
         ];
     }

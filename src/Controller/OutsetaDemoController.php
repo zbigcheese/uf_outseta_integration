@@ -21,7 +21,7 @@ class OutsetaDemoController
 
     public function page(Request $request, Response $response, OutsetaService $outseta, Twig $view): Response
     {
-        $person = $outseta->getPersonByEmail('info@urosaleksic.com');
+        $person = $outseta->getPersonByEmail('dejan.otasevic@gmail.com');
 
         if ($person) {
             $payload = [

@@ -15,5 +15,10 @@ class Routes implements RouteDefinitionInterface
     {
         $app->get('/uf-outseta-integration', OutsetaIntegrationController::class);
         $app->get('/uf-outseta-demo', [OutsetaDemoController::class, 'page']);
+
+        $app->group('/api/outseta', function ($app) {
+            // This route will handle all incoming webhooks from Outseta
+            $app->post('/webhooks', [WebhookController::class, 'process']);
+        });
     }
 }
