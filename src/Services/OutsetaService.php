@@ -74,6 +74,33 @@ class OutsetaService
     }
 
     /**
+     * Retrieves the authenticated user's profile from Outseta using an access token.
+     *
+     * @param string $accessToken The access token received from Outseta.
+     * @return array|null The person's data as an array, or null if it fails.
+     */
+    public function getPersonByToken(string $accessToken): ?array
+    {
+        try {
+            // We make a request to the /profile endpoint, but instead of our admin API key,
+            // we use the user's access token as a Bearer token for authorization.
+            $response = $this->client->get('profile', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                ]
+            ]);
+
+            return json_decode((string) $response->getBody(), true);
+
+        } catch (RequestException $e) {
+            // If the token is invalid or expired, Outseta will return a 401 error.
+            // We log the error and return null.
+            error_log('Outseta getPersonByToken failed: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * A helper function to process the API response.
      *
      * @param ResponseInterface $response

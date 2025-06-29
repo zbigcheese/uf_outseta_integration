@@ -5,6 +5,7 @@ namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\ServicesProvider;
 use Psr\Container\ContainerInterface;
 use UserFrosting\ServicesProvider\ServicesProviderInterface;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\OutsetaService;
+use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\UserProvisioner;
 
 class OutsetaServiceProvider implements ServicesProviderInterface
 {
@@ -19,7 +20,8 @@ class OutsetaServiceProvider implements ServicesProviderInterface
             OutsetaService::class => function (ContainerInterface $c) {
                 return new OutsetaService(
                     $c->get('config'),
-                    new \GuzzleHttp\Client()
+                    new \GuzzleHttp\Client(),
+                    new UserProvisioner()
                 );
             }
         ];
