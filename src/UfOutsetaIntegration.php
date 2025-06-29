@@ -2,13 +2,13 @@
 
 namespace Zbigcheese\Sprinkles\UfOutsetaIntegration;
 
-use UserFrosting\Sprinkle\Core\Bakery\MigrationRecipe;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Migrations\AddOutsetaSubscribersTable;
-
-use UserFrosting\Sprinkle\Core\Core;
+// Corrected 'use' statements
 use UserFrosting\Sprinkle\SprinkleRecipe;
+use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\MigrationRecipe;
+use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Migrations\AddOutsetaSubscribersTable;
+use Zbigcheese\Sprinkles\UfOutsetaIntegration\ServicesProvider\OutsetaServiceProvider;
 
-class UfOutsetaIntegration implements SprinkleRecipe
+class UfOutsetaIntegration implements SprinkleRecipe, MigrationRecipe
 {
     public function getName(): string
     {
@@ -20,11 +20,16 @@ class UfOutsetaIntegration implements SprinkleRecipe
         return __DIR__ . '/../';
     }
 
-    public function getSprinkles(): array
+    public function getServices(): array
     {
         return [
-            Core::class,
+            OutsetaServiceProvider::class,
         ];
+    }
+
+    public function getSprinkles(): array
+    {
+        return [];
     }
 
     public function getRoutes(): array
@@ -32,24 +37,6 @@ class UfOutsetaIntegration implements SprinkleRecipe
         return [
             Routes::class,
         ];
-    }
-
-    /*public function getTemplates(): array
-    {
-        return [
-            'default' => DefaultTemplate::class,
-        ];
-    }*/
-
-    /**
-     * Returns a list of all PHP-DI services/container definitions class.
-     *
-     * @return class-string<\UserFrosting\ServicesProvider\ServicesProviderInterface>[]
-     */
-    public function getServices(): array
-    {
-        // This sprinkle does not have any custom services.
-        return [];
     }
 
     /**
@@ -63,5 +50,19 @@ class UfOutsetaIntegration implements SprinkleRecipe
         return [
             AddOutsetaSubscribersTable::class,
         ];
+    }
+
+    /**
+     * Returns a list of all Bakery commands for this Sprinkle.
+     *
+     * @return array<class-string<\Symfony\Component\Console\Command\Command>>
+     */
+    public function getBakeryCommands(): array
+    {
+        // We can leave this in for future use or remove if you prefer.
+        // return [
+        //     ForceMigrateCommand::class,
+        // ];
+        return [];
     }
 }
