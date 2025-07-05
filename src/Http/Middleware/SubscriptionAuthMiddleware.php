@@ -19,9 +19,13 @@ final class SubscriptionAuthMiddleware implements MiddlewareInterface
 {
     // Define active subscription stages from Outseta
     private const ACTIVE_STAGES = [
-        1, // Trialing
-        2, // Active
-        5, // Past Due
+        2, // Trialing (on a free trial or subscribed to a free plan)
+        3, // Subscribing (on a paid subscription and contributes to your monthly recurring revenue)
+        4, // Canceling (The customer has indicated they want to cancel their base subscription.)
+        //5, // Expired (The base subscription has ended after cancellation)
+        //6, // Trial Expired
+        7, // Past due (The base subscription is current, but payment has failed. The user likely needs to update the credit card information that they have on file.)
+        8, // Cancelling Trial (When a user requests to cancel during a free trial period. The user will continue to have access for the rest of the trial period, but will not be subscribed at the end of the trial period.)
     ];
 
     public function __construct(

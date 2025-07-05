@@ -38,7 +38,7 @@ class WebhookController
         $data = json_decode($payload, true);
 
         // Check if this is a subscription creation event and it has the data we need
-        if (isset($data['Metadata']['uf_user_id']) && isset($data['Data']['Person']['Uid'])) {
+        /*if (isset($data['Metadata']['uf_user_id']) && isset($data['Data']['Person']['Uid'])) {
             $userFrostingId = $data['Metadata']['uf_user_id'];
             $outsetaPersonUid = $data['Data']['Person']['Uid'];
 
@@ -51,6 +51,17 @@ class WebhookController
                     ['outseta_uid' => $outsetaPersonUid]
                 );
             }
+        }*/
+
+        //Outseta Owner Account registration handdling
+        if (isset($data['ActivityType']) && $data['ActivityType'] === 'Account.Added') {
+            
+            // 3. Get the data for the primary person on the new account
+            $personData = $data['Data']['Person'];
+
+            // 4. Use the UserProvisioner to create the local user
+            // We pass the group slug to assign them correctly.
+            $provisioner->findOrCreate($personData, 'outseta-account-owners');
         }
         
         // Always return a 200 OK response to Outseta to acknowledge successful receipt.

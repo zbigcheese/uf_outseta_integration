@@ -101,4 +101,44 @@ class OutsetaService
             return null;
         }
     }
+
+    /**
+     * Adds a new person to an existing account in Outseta.
+     *
+     * @param array $personData ['Email' => '...', 'FirstName' => '...', 'LastName' => '...']
+     * @param string $accountUid The UID of the owner's account.
+     * @return array|null The new person's data from Outseta.
+     */
+    public function addPersonToAccount(array $personData, string $accountUid): ?array
+    {
+        try {
+            $response = $this->client->post("crm/accounts/{$accountUid}/people", [
+                'json' => $personData
+            ]);
+
+            return json_decode((string) $response->getBody(), true);
+        } catch (RequestException $e) {
+            error_log('Outseta addPersonToAccount failed: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Removes a person from an account in Outseta.
+     *
+     * @param string $personUid The UID of the person to remove.
+     * @param string $accountUid The UID of the account they belong to.
+     * @return bool True on success, false on failure.
+     */
+    public function removePersonFromAccount(string $personUid, string $accountUid): bool
+    {
+        try {
+            $this->client->delete("crm/accounts/{$accountUid}/people/{$personUid}");
+
+            return true;
+        } catch (RequestException $e) {
+            error_log('Outseta removePersonFromAccount failed: ' . $e->getMessage());
+            return false;
+        }
+    }
 }

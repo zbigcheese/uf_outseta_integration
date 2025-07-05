@@ -13,7 +13,10 @@ use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Migrations\AddOutsetaSubs
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\ServicesProvider\OutsetaServiceProvider;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Routes;
 
-class UfOutsetaIntegration implements SprinkleRecipe, MigrationRecipe
+use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\SeedRecipe;
+use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Seeds\OutsetaGroupSeed;
+
+class UfOutsetaIntegration implements SprinkleRecipe, MigrationRecipe, SeedRecipe
 {
     public function getName(): string { return 'Outseta Integration'; }
 
@@ -29,8 +32,6 @@ class UfOutsetaIntegration implements SprinkleRecipe, MigrationRecipe
 
     /**
      * Returns a list of Sprinkles this Sprinkle depends on.
-     * THIS IS THE FIX.
-     * This guarantees that Core, Account, and Admin services are loaded before this Sprinkle.
      */
     public function getSprinkles(): array
     {
@@ -38,6 +39,18 @@ class UfOutsetaIntegration implements SprinkleRecipe, MigrationRecipe
             Core::class,
             Account::class,
             Admin::class,
+        ];
+    }
+
+    /**
+     * Returns a list of all seeds classes for this Sprinkle.
+     *
+     * @return array<class-string<SeedInterface>>
+     */
+    public function getSeeds(): array
+    {
+        return [
+            OutsetaGroupSeed::class,
         ];
     }
 }

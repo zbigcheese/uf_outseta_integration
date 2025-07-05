@@ -10,49 +10,46 @@ use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Models\OutsetaSubscriber;
 class UserProvisioner
 {
     /**
-     * Finds a local user by their Outseta UID or creates one based on Outseta profile data.
+     * Finds a local user or creates one, assigning them to a specific group.
      *
      * @param array $outsetaPerson The user data array from the Outseta API.
+     * @param string $groupSlug The slug of the group to assign the new user to.
      * @return UserInterface The found or newly created UserFrosting user.
      */
-    public function findOrCreate(array $outsetaPerson): UserInterface
+    public function findOrCreate(array $outsetaPerson, string $groupSlug): UserInterface
     {
-        // First, try to find an existing user via the relationship.
         $subscriber = OutsetaSubscriber::where('outseta_uid', $outsetaPerson['Uid'])->first();
-
         if ($subscriber) {
-            return $subscriber->user; // Eloquent relationships make this easy!
+            return $subscriber->user;
         }
 
-        // If not found, try to find an unlinked user by email.
         $user = User::where('email', $outsetaPerson['Email'])->first();
 
-        // If user doesn't exist at all, create a new one.
+        // If user doesn't exist, create them.
         if (!$user) {
-            $defaultLocale = Config::getString('site.registration.user_defaults.locale', 'en_US');
-            $defaultGroupId = Config::getInt('site.registration.user_defaults.group_id', 1);
+            // Find the group by its slug
+            $group = Group::where('slug', $groupSlug)->first();
+            $groupId = $group ? $group->id : Config::getInt('site.registration.user_defaults.group_id', 1);
 
             $user = new User([
                 'user_name'     => $outsetaPerson['Email'],
                 'first_name'    => $outsetaPerson['FirstName'],
                 'last_name'     => $outsetaPerson['LastName'],
                 'email'         => $outsetaPerson['Email'],
-                'locale'        => $defaultLocale,
-                'group_id'      => $defaultGroupId,
+                'locale'        => Config::getString('site.registration.user_defaults.locale', 'en_US'),
+                'group_id'      => $groupId,
                 'flag_verified' => 1,
                 'password'      => bin2hex(random_bytes(16))
             ]);
             $user->save();
         }
 
-        // Now that we have a user (either found by email or newly created),
-        // create the linking OutsetaSubscriber record for them.
+        // Create the linking OutsetaSubscriber record.
         OutsetaSubscriber::create([
             'user_id'     => $user->id,
             'outseta_uid' => $outsetaPerson['Uid'],
         ]);
         
-        // Return the main user object
         return $user;
     }
 }
