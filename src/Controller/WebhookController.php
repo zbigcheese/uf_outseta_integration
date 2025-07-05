@@ -7,64 +7,46 @@ namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response as SlimResponse;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
-use UserFrosting\Sprinkle\Core\Facades\Config;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Models\OutsetaSubscriber;
+use UserFrosting\Config\Config;
+use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\UserProvisioner;
 
 class WebhookController
 {
-    public function process(Request $request): Response
+    public function __construct(
+        protected UserProvisioner $provisioner,
+        protected Config $config
+    ) {
+    }
+
+    public function processAccountCreated(Request $request): Response
     {
-        // 1. Get the secret key from your application's config
-        $secretKey = Config::getString('outseta.webhook_key');
+        // 1. Verify the webhook signature
+        $hexSecretKey = $this->config->getString('outseta.webhook_key');
 
-        // 2. Get the signature from the request header
-        $outsetaSignature = $request->getHeaderLine('Outseta-Signature');
+        // --- THIS IS THE FIX ---
+        // Decode the hex key into its raw binary representation before using it.
+        $binarySecretKey = hex2bin($hexSecretKey);
 
-        // 3. Get the raw content of the request body
+        $outsetaSignatureHeader = $request->getHeaderLine('X-Hub-Signature-256');
+        $signatureParts = explode('=', $outsetaSignatureHeader, 2);
+        $outsetaSignature = $signatureParts[1] ?? '';
         $payload = (string)$request->getBody();
 
-        // 4. Calculate what the signature should be
-        $expectedSignature = hash_hmac('sha256', $payload, $secretKey);
+        // Use the decoded binary key in the calculation
+        $expectedSignature = hash_hmac('sha256', $payload, $binarySecretKey);
 
-        // 5. Securely compare the expected signature with the one from the header
         if (!hash_equals($expectedSignature, $outsetaSignature)) {
-            // If they don't match, this is a fraudulent request. Reject it.
-            return new SlimResponse(401); // 401 Unauthorized
+            return new SlimResponse(401);
         }
 
-        // --- Signature is valid, proceed with processing the webhook ---
-        
+        // 2. Process the valid payload
         $data = json_decode($payload, true);
 
-        // Check if this is a subscription creation event and it has the data we need
-        /*if (isset($data['Metadata']['uf_user_id']) && isset($data['Data']['Person']['Uid'])) {
-            $userFrostingId = $data['Metadata']['uf_user_id'];
-            $outsetaPersonUid = $data['Data']['Person']['Uid'];
-
-            // Find the local user
-            $user = User::find($userFrostingId);
-
-            if ($user) {
-                OutsetaSubscriber::updateOrCreate(
-                    ['user_id' => $user->id],
-                    ['outseta_uid' => $outsetaPersonUid]
-                );
-            }
-        }*/
-
-        //Outseta Owner Account registration handdling
-        if (isset($data['ActivityType']) && $data['ActivityType'] === 'Account.Added') {
-            
-            // 3. Get the data for the primary person on the new account
-            $personData = $data['Data']['Person'];
-
-            // 4. Use the UserProvisioner to create the local user
-            // We pass the group slug to assign them correctly.
-            $provisioner->findOrCreate($personData, 'outseta-account-owners');
+        if (isset($data['PrimaryContact']['Uid'])) {
+            $personData = $data['PrimaryContact'];
+            $this->provisioner->findOrCreate($personData, 'outseta-account-owners');
         }
-        
-        // Always return a 200 OK response to Outseta to acknowledge successful receipt.
+
         return new SlimResponse(200);
     }
 }

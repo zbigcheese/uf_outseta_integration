@@ -14,6 +14,7 @@ use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Models\User as ExtendedUs
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Http\Middleware\SubscriptionAuthMiddleware;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\OutsetaService;
 use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\UserProvisioner;
+use Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller\WebhookController;
 
 class OutsetaServiceProvider implements ServicesProviderInterface
 {
@@ -28,6 +29,8 @@ class OutsetaServiceProvider implements ServicesProviderInterface
 
             // This one is also fine.
             UserInterface::class => \DI\create(ExtendedUser::class),
+
+            WebhookController::class => \DI\autowire(WebhookController::class),
             
             // --- THIS IS THE FIX ---
             // We replace the autowiring for the middleware with a manual factory.
