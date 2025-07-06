@@ -1,6 +1,6 @@
 <?php
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\ServicesProvider;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\ServicesProvider;
 
 // Add these new 'use' statements
 use Psr\Container\ContainerInterface;
@@ -10,11 +10,11 @@ use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 
 use UserFrosting\ServicesProvider\ServicesProviderInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Models\User as ExtendedUser;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Http\Middleware\SubscriptionAuthMiddleware;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\OutsetaService;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\UserProvisioner;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller\WebhookController;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Database\Models\User as ExtendedUser;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Http\Middleware\SubscriptionAuthMiddleware;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Services\OutsetaService;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Services\UserProvisioner;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Controller\WebhookController;
 
 class OutsetaServiceProvider implements ServicesProviderInterface
 {

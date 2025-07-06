@@ -1,12 +1,12 @@
 <?php
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Services;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Services;
 
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Models\OutsetaSubscriber;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Database\Models\OutsetaSubscriber;
 
 
 class UserProvisioner
@@ -25,9 +25,6 @@ class UserProvisioner
         $user = User::where('email', $outsetaPerson['Email'])->first();
 
         if (!$user) {
-            // Get the config service from the container, only when needed.
-            //$config = $this->ci->get('config');
-
             $group = Group::where('slug', $groupSlug)->first();
             $groupId = $group ? $group->id : $this->config->getInt('site.registration.user_defaults.group_id', 1);
 

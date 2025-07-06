@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration;
 
 //use Psr\Http\Message\ResponseInterface as Response;
 //use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller\OutsetaIntegrationController;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller\OutsetaDemoController;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller\TeamController;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Controller\OutsetaIntegrationController;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Controller\OutsetaDemoController;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Controller\TeamController;
 use UserFrosting\Sprinkle\Core\Http\Middleware\AuthGuard;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller\WebhookController;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\UserProvisioner;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Controller\WebhookController;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Services\UserProvisioner;
 
 class Routes implements \UserFrosting\Routes\RouteDefinitionInterface
 {
@@ -22,7 +22,7 @@ class Routes implements \UserFrosting\Routes\RouteDefinitionInterface
         $app->get('/uf-outseta-demo', [OutsetaDemoController::class, 'page']);
 
         $app->group('/api/outseta/webhooks', function ($app) {
-            $app->post('', [WebhookController::class, 'processAccountCreated']);
+            $app->post('/accountCreated', [WebhookController::class, 'processAccountCreated']);
         });
 
         $app->group('/team', function ($app) {

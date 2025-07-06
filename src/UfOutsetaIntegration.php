@@ -1,20 +1,19 @@
 <?php
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration;
 
-// These 'use' statements declare the dependencies
 use UserFrosting\Sprinkle\Core\Core;
 use UserFrosting\Sprinkle\Account\Account;
 use UserFrosting\Sprinkle\Admin\Admin;
 
 use UserFrosting\Sprinkle\SprinkleRecipe;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\MigrationRecipe;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Migrations\AddOutsetaSubscribersTable;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\ServicesProvider\OutsetaServiceProvider;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Routes;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Database\Migrations\AddOutsetaSubscribersTable;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\ServicesProvider\OutsetaServiceProvider;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Routes;
 
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\SeedRecipe;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Seeds\OutsetaGroupSeed;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Database\Seeds\OutsetaGroupSeed;
 
 class UfOutsetaIntegration implements SprinkleRecipe, MigrationRecipe, SeedRecipe
 {

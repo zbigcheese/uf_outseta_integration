@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response as SlimResponse;
 use UserFrosting\Config\Config;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\UserProvisioner;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Services\UserProvisioner;
 
 class WebhookController
 {
@@ -23,7 +23,6 @@ class WebhookController
         // 1. Verify the webhook signature
         $hexSecretKey = $this->config->getString('outseta.webhook_key');
 
-        // --- THIS IS THE FIX ---
         // Decode the hex key into its raw binary representation before using it.
         $binarySecretKey = hex2bin($hexSecretKey);
 
