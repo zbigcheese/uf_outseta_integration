@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Http\Middleware;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Http\Middleware;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Exceptions\AuthGuardException;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\OutsetaService;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Services\OutsetaService;
 
 
 final class SubscriptionAuthMiddleware implements MiddlewareInterface

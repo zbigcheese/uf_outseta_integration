@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\OutsetaService;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\UserProvisioner;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Services\OutsetaService;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Services\UserProvisioner;
 
 class TeamController
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Services;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Services;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;

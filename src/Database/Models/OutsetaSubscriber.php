@@ -1,6 +1,6 @@
 <?php
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Models;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Database\Models;
 
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Account\Database\Models\User;

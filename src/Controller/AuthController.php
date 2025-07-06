@@ -1,12 +1,12 @@
 <?php
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Controller;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\OutsetaService;
-use Zbigcheese\Sprinkles\UfOutsetaIntegration\Services\UserProvisioner;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Services\OutsetaService;
+use UserFrosting\Sprinkle\UfOutsetaIntegration\Services\UserProvisioner;
 
 class AuthController
 {

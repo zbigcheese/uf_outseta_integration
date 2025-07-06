@@ -1,6 +1,6 @@
 <?php
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Migrations;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Database\Migrations;
 
 use Illuminate\Database\Schema\Blueprint;
 use UserFrosting\Sprinkle\Core\Database\Migration;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Http\Middleware;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Http\Middleware;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;

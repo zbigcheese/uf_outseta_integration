@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Seeds;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Database\Seeds;
 
 use Illuminate\Support\Str; // <-- Add this use statement
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
