@@ -4,6 +4,7 @@ namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Services;
 
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\UfOutsetaIntegration\Database\Models\OutsetaSubscriber;
@@ -39,6 +40,14 @@ class UserProvisioner
                 'password'      => bin2hex(random_bytes(16))
             ]);
             $user->save();
+
+            // If this is a new owner, find and attach the corresponding role.
+            if ($groupSlug === 'outseta-account-owners') {
+                $ownerRole = Role::where('slug', 'outseta-account-owners')->first();
+                if ($ownerRole) {
+                    $user->roles()->attach($ownerRole->id);
+                }
+            }
         }
 
         OutsetaSubscriber::create([

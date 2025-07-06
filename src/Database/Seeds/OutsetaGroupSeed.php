@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Database\Seeds;
 
-use Illuminate\Support\Str; // <-- Add this use statement
+use Illuminate\Support\Str;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
+
 use UserFrosting\Sprinkle\Core\Seeder\SeedInterface;
 
 class OutsetaGroupSeed implements SeedInterface
