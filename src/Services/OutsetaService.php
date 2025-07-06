@@ -5,7 +5,7 @@ namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Services;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
-use UserFrosting\Config\Config; // <-- Import Config
+use UserFrosting\Config\Config;
 
 class OutsetaService
 {
@@ -21,8 +21,6 @@ class OutsetaService
         $outsetaDomain = $config->getString('outseta.domain');
         $baseUrl = "https://{$outsetaDomain}.outseta.com/api/v1/";
 
-        // Guzzle client is now created directly here.
-        // We use the injected $client and re-configure it.
         $this->client = new HttpClient([
             'base_uri' => $baseUrl,
             'headers' => [
@@ -31,12 +29,10 @@ class OutsetaService
                 'Accept'        => 'application/json',
             ],
             'timeout' => 5.0,
-            'verify'  => false, // Keep the SSL workaround for your local env
+            'verify'  => false, // SSL workaround for local
         ]);
     }
 
-    // All other methods (getPersonByEmail, etc.) are the same,
-    // but they now use $this->client directly, not $this->getClient().
     public function getPersonByEmail(string $email): ?array
     {
         try {
