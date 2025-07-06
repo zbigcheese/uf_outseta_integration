@@ -1,6 +1,6 @@
 <?php
 
-namespace Zbigcheese\Sprinkles\UfOutsetaIntegration\Database\Models;
+namespace UserFrosting\Sprinkle\UfOutsetaIntegration\Database\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use UserFrosting\Sprinkle\Account\Database\Models\User as CoreUser;
