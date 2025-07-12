@@ -29,7 +29,7 @@ class OutsetaService
                 'Accept'        => 'application/json',
             ],
             'timeout' => 5.0,
-            'verify'  => false, // SSL workaround for local
+            //'verify'  => false, // SSL workaround for local
         ]);
     }
 
