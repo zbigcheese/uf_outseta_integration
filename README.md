@@ -1,4 +1,4 @@
-This is a simple base integration of the Outseta service for UserFrosting 5.
+This is a simple base integration of the Outseta service (https://www.outseta.com/) for UserFrosting 5.
 
 ---
 Installation:
